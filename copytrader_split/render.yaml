@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: copytrader-web
+    runtime: node
+    rootDir: web-server
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_SECRET
+        generateValue: true
+      - key: VPS_AGENT_SECRET
+        sync: false          # You set this manually — must match your VPS
+      - key: SERVER_URL
+        fromService:
+          type: web
+          name: copytrader-web
+          property: host
+      - key: DATA_DIR
+        value: /opt/render/project/src/web-server/data
+
+    disk:
+      name: copytrader-data
+      mountPath: /opt/render/project/src/web-server/data
+      sizeGB: 1
